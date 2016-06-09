@@ -1,4 +1,5 @@
 #include <iostream>
+#include "../../core/bitmap/bmploader.h"
 #include "../utils/GridConfigs.cpp"
 using namespace std;
 
@@ -15,24 +16,35 @@ class Map {
 private:
   GridConfigs *gridConfigs;
   int map[20][20];
+  int imageWidth;
+  int imageHeight;
+  uchar4 *dst;
+  GLuint color_tex;
 public:
 
   Map(GridConfigs *gridConfigs) {
     this->gridConfigs = gridConfigs;
+
+    LoadBMPFile(&dst, &imageWidth, &imageHeight, "images/wall.bmp"); // this is how to load image
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glBindTexture(GL_TEXTURE_2D, color_tex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
     for (int i=0; i<20; i++) {
       for (int j=0; j<20; j++) {
 	map[i][j] = 0;
       }
     }
-
   }
 
   void render() {
     for (int i=0; i<20; i++) {
       for (int j=0; j<20; j++){
     	if (map[i][j] == 1) {
-	  if (gridConfigs->getDimension() == 2) drawCube((i-10)*0.1 + 0.05, (j-10)*0.1 + 0.05);
-	  else drawCube((i-10)*0.1 + 0.1, (j-10)*0.1 + 0.1);
+	  drawCube((i-10)*0.1 + 0.05, (j-10)*0.1 + 0.05, 0.2f);
 	}
       }
     }
@@ -48,6 +60,12 @@ public:
     }
   }
 
+  void addWallWithoutToggle() {
+    int p[2];
+    gridConfigs->getMapBlockIndex(p);
+    map[p[0]][p[1]] = 1;
+  }
+
   void printMap() {
     for (int i=0; i<20; i++) {
       for (int j=0; j<20; j++) {
@@ -55,17 +73,21 @@ public:
       }
       cout << endl;
     }
+    cout << endl;
   }
 
-  void drawCube(float offX, float offY) {
+  void drawCube(float offX, float offY, float height) {
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, color_tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageWidth, imageHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, dst);
     glBegin(GL_QUADS);
     // top
     // glColor3f(1.0f, 0.0f, 0.0f);
     glNormal3f(0.0f, 1.0f, 0.0f);
-    glVertex3f(offX + -0.05f, offY + 0.05f, 0.05f);
-    glVertex3f(offX + 0.05f, offY +0.05f, 0.05f);
-    glVertex3f(offX + 0.05f, offY + 0.05f, -0.05f);
-    glVertex3f(offX + -0.05f, offY + 0.05f, -0.05f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(offX + -0.05f, offY + 0.05f, height);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(offX + 0.05f, offY +0.05f, height);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(offX + 0.05f, offY + 0.05f, 0);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(offX + -0.05f, offY + 0.05f, 0);
 
     glEnd();
 
@@ -73,10 +95,10 @@ public:
     // front
     // glColor3f(0.0f, 1.0f, 0.0f);
     glNormal3f(0.0f, 0.0f, 1.0f);
-    glVertex3f(offX + 0.05f, offY + -0.05f, 0.05f);
-    glVertex3f(offX + 0.05f, offY + 0.05f, 0.05f);
-    glVertex3f(offX + -0.05f, offY + 0.05f, 0.05f);
-    glVertex3f(offX + -0.05f, offY + -0.05f, 0.05f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(offX + 0.05f, offY + -0.05f, height);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(offX + 0.05f, offY + 0.05f, height);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(offX + -0.05f, offY + 0.05f, height);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(offX + -0.05f, offY + -0.05f, height);
 
     glEnd();
 
@@ -84,10 +106,10 @@ public:
     // right
     // glColor3f(0.0f, 0.0f, 1.0f);
     glNormal3f(1.0f, 0.0f, 0.0f);
-    glVertex3f(offX + 0.05f, offY + 0.05f, -0.05f);
-    glVertex3f(offX + 0.05f, offY + 0.05f, 0.05f);
-    glVertex3f(offX + 0.05f, offY + -0.05f, 0.05f);
-    glVertex3f(offX + 0.05f, offY + -0.05f, -0.05f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(offX + 0.05f, offY + 0.05f, 0);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(offX + 0.05f, offY + 0.05f, height);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(offX + 0.05f, offY + -0.05f, height);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(offX + 0.05f, offY + -0.05f, 0);
 
     glEnd();
 
@@ -95,10 +117,10 @@ public:
     // left
     // glColor3f(0.0f, 0.0f, 0.05f);
     glNormal3f(-1.0f, 0.0f, 0.0f);
-    glVertex3f(offX + -0.05f, offY + -0.05f, 0.05f);
-    glVertex3f(offX + -0.05f, offY + 0.05f, 0.05f);
-    glVertex3f(offX + -0.05f, offY + 0.05f, -0.05f);
-    glVertex3f(offX + -0.05f, offY + -0.05f, -0.05f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(offX + -0.05f, offY + -0.05f, height);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(offX + -0.05f, offY + 0.05f, height);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(offX + -0.05f, offY + 0.05f, 0);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(offX + -0.05f, offY + -0.05f, 0);
 
     glEnd();
 
@@ -106,10 +128,10 @@ public:
     // bottom
     // glColor3f(0.05f, 0.0f, 0.0f);
     glNormal3f(0.0f, -1.0f, 0.0f);
-    glVertex3f(offX + 0.05f, offY + -0.05f, 0.05f);
-    glVertex3f(offX + -0.05f, offY + -0.05f, 0.05f);
-    glVertex3f(offX + -0.05f, offY + -0.05f, -0.05f);
-    glVertex3f(offX + 0.05f, offY + -0.05f, -0.05f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(offX + 0.05f, offY + -0.05f, height);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(offX + -0.05f, offY + -0.05f, height);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(offX + -0.05f, offY + -0.05f, 0);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(offX + 0.05f, offY + -0.05f, 0);
 
     glEnd();
 
@@ -117,12 +139,13 @@ public:
     // back
     // glColor3f(0.0f, 0.05f, 0.0f);
     glNormal3f(0.0f, 0.0f, -1.0f);
-    glVertex3f(offX + 0.05f, offY + 0.05f, -0.05f);
-    glVertex3f(offX + 0.05f, offY + -0.05f, -0.05f);
-    glVertex3f(offX + -0.05f, offY + -0.05f, -0.05f);
-    glVertex3f(offX + -0.05f, offY + 0.05f, -0.05f);
+    glVertex3f(offX + 0.05f, offY + 0.05f, 0);
+    glVertex3f(offX + 0.05f, offY + -0.05f, 0);
+    glVertex3f(offX + -0.05f, offY + -0.05f, 0);
+    glVertex3f(offX + -0.05f, offY + 0.05f, 0);
 
     glEnd();
+    glDisable(GL_TEXTURE_2D);
   }
 };
 

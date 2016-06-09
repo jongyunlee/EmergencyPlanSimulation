@@ -36,11 +36,14 @@ CursorOver *cursorOver;
 Map *map;
 Grid *grid;
 
+bool drag = false;
+
 void init(void) {
   glewInit();
   glClearColor (0.0, 0.0, 0.0, 0.0);
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_LIGHT0);
+
   glShadeModel(GL_SMOOTH);
 
   // init objects
@@ -52,8 +55,7 @@ void init(void) {
 
 void displayObjects() {
   grid->render();
-  // if (gridConfigs->getDimension() == 2) cursorOver->render();
-  cursorOver->render();
+  if (gridConfigs->getDimension() == 2) cursorOver->render();
   map->render();
 }
 
@@ -107,15 +109,20 @@ void mouseRoutine(int x, int y) {
 
 void mouseMotion(int x, int y) {
   gridConfigs->setCursorPosition(x, y);
+  if (drag && gridConfigs->getDimension() == 2) map->addWallWithoutToggle();
 }
+
+
 
 void mouseButton(int button, int state, int x, int y) {
   if (button == GLUT_LEFT_BUTTON) {
     switch(state) {
     case GLUT_DOWN:
+      drag = true;
       break;
     case GLUT_UP:
-      map->addWall();
+      // if (gridConfigs->getDimension() == 2) map->addWall();
+      drag = false;
       break;
     }
   }
