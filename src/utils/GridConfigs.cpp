@@ -17,15 +17,15 @@ private:
   int screenWidth;
   int screenHeight;
   int dimension;
-  int lookDistance2D;
-  int lookDistance3D;
+  float lookDistance2D;
+  float lookDistance3D;
 public:
   GridConfigs() {
     screenWidth = 512;
     screenHeight = 512;
     dimension = 2;
     lookDistance2D = 3.0;
-    lookDistance3D = 50.0;
+    lookDistance3D = 2.3;
   }
 
   int getScreenWidth() {
@@ -45,15 +45,23 @@ public:
   }
 
   void lookAt2DGrid() {
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(-1.0, 1.0, -1.0, 1.0, 0.0, 400);
+    glMatrixMode(GL_MODELVIEW);
     gluLookAt(0.0,0.0,lookDistance2D,
     	      0.0,0.0,0.0,
     	      0.0f,1.0f,0.0f);
   }
 
   void lookAt3DGrid() {
-    gluLookAt(lookDistance3D,lookDistance3D,lookDistance3D,
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(40.0, (GLfloat) screenWidth/(GLfloat)screenHeight, 1.0, 300.0);
+    glMatrixMode(GL_MODELVIEW);
+    gluLookAt(-lookDistance3D,-lookDistance3D,lookDistance3D,
     	      0.0,0.0,0.0,
-    	      1.0f,1.0f,-1.0f);
+    	      1.0f,1.0f,1.0f);
   }
 
   void setCursorPosition(int x, int y) {

@@ -30,10 +30,12 @@ public:
   void render() {
     for (int i=0; i<20; i++) {
       for (int j=0; j<20; j++){
-    	if (map[i][j] == 1) drawCube((i-10)*0.1 + 0.05, (j-10)*0.1 + 0.05);
+    	if (map[i][j] == 1) {
+	  if (gridConfigs->getDimension() == 2) drawCube((i-10)*0.1 + 0.05, (j-10)*0.1 + 0.05);
+	  else drawCube((i-10)*0.1 + 0.1, (j-10)*0.1 + 0.1);
+	}
       }
     }
-    // drawCube((0-10)*0.1 + 0.05, (0-10)*0.1 + 0.05);
   }
 
   void addWall() {

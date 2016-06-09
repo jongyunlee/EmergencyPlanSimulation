@@ -29,8 +29,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-
-
 int width, height;
 float lpos[4] = {2,-4,3,0};
 GridConfigs *gridConfigs;
@@ -54,7 +52,8 @@ void init(void) {
 
 void displayObjects() {
   grid->render();
-  if (gridConfigs->getDimension() == 2) cursorOver->render();
+  // if (gridConfigs->getDimension() == 2) cursorOver->render();
+  cursorOver->render();
   map->render();
 }
 
@@ -63,9 +62,9 @@ void display(void)
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // test
   glClearColor (0.0, 0.0, 0.0, 0.0);
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  glOrtho(-1.0, 1.0, -1.0, 1.0, 0.0, 100);
+  // glMatrixMode(GL_PROJECTION);
+  // glLoadIdentity();
+  // glOrtho(-1.0, 1.0, -1.0, 1.0, 0.0, 400);
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   glLightfv(GL_LIGHT0, GL_POSITION, lpos); // test
