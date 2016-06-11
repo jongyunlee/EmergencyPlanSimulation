@@ -22,6 +22,8 @@ private:
   float lookDistance3D;
   int cursor3dPositionX = 0;
   int cursor3dPositionY = 0;
+  bool walkMode;
+  float fromWX, fromWY, toWX, toWY;
 public:
   GridConfigs() {
     screenWidth = 720;
@@ -29,6 +31,7 @@ public:
     dimension = 2;
     lookDistance2D = 3.0;
     lookDistance3D = 2.3;
+    walkMode = false;
   }
 
   int getScreenWidth() {
@@ -40,6 +43,16 @@ public:
   }
 
   void lookAtGrid() {
+    if (walkMode) {
+      glMatrixMode(GL_PROJECTION);
+      glLoadIdentity();
+      gluPerspective(90.0, (GLfloat) screenWidth/(GLfloat)screenHeight, 0.1, 300.0);
+      glMatrixMode(GL_MODELVIEW);
+      gluLookAt(fromWX, fromWY, 0.07,
+      		toWX, toWY, 0.07,
+      		0.0f,0.0f,1.0f);
+      return;
+    }
     if (dimension == 2) {
       lookAt2DGrid();
     } else if (dimension == 3) {
@@ -123,6 +136,26 @@ public:
 
   void move3dPositionY(int m) {
     cursor3dPositionY += m;
+  }
+
+  void setWalkMode() {
+    if (walkMode) {
+      walkMode = false;
+    } else {
+      walkMode = true;
+    }
+    cout << "setWalkMode : " << walkMode << endl;
+  }
+
+  bool getWalkMode() {
+    return walkMode;
+  }
+
+  void setWalkModeLookAt(float fromX, float fromY, float toX, float toY) {
+    fromWX = fromX;
+    fromWY = fromY;
+    toWX = toX;
+    toWY = toY;
   }
 };
 

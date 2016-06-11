@@ -39,6 +39,8 @@ Map *map;
 Grid *grid;
 GLuint p;
 bool drag = false;
+int positionCount;
+int intervalCount;
 
 void init(void) {
   glewInit();
@@ -113,11 +115,35 @@ void keyboard (unsigned char key, int x, int y) {
     if (gridConfigs->getDimension() == 3)gridConfigs->move3dPositionX(+1);
   } else if (key == ' ') {
     if (gridConfigs->getDimension() == 3)map->addPathPosition();
+  } else if (key == 'o') {
+    positionCount = 0;
+    intervalCount = 0;
+    gridConfigs->setWalkMode();
   }
 }
 
+
+
 void idle()
 {
+  if (gridConfigs->getWalkMode()) {
+    if (map->hasWalkPosition(positionCount) && map->hasWalkPosition(positionCount+1)) {
+      cout << "intervalcount : " << intervalCount << endl;
+      intervalCount++;
+      float fromX = map->getXPosition(positionCount);
+      float fromY = map->getYPosition(positionCount);
+      float toX = map->getXPosition(positionCount+1);
+      float toY = map->getYPosition(positionCount+1);
+      gridConfigs->setWalkModeLookAt(fromX + ((toX-fromX) * intervalCount / 200), fromY + ((toY-fromY) * intervalCount / 200), toX, toY);
+      if (intervalCount > 200) {
+	cout << "positionCount : " << positionCount << endl;
+	intervalCount = 0;
+	positionCount++;
+      }
+    } else {
+      gridConfigs->setWalkMode();
+    }
+  }
   glutPostRedisplay();
 }
 

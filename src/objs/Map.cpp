@@ -199,6 +199,19 @@ public:
     cout << "pc : " << pathCount << endl;
     // pathPositions.push_back(position);
   }
+
+  bool hasWalkPosition(int i) {
+    if (pathCount > i) return true;
+    return false;
+  }
+
+  float getXPosition(int i) {
+    return paths[i].x;
+  }
+
+  float getYPosition(int i) {
+    return paths[i].y;
+  }
 };
 
 #endif
