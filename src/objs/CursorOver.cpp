@@ -22,22 +22,32 @@ public:
   }
 
   void drawObject() {
-    glBegin(GL_QUADS);
-    // float rx = (float)gridConfigs->getCursorX() / (float)gridConfigs->getScreenWidth();
-    // float ry = (float)(gridConfigs->getScreenHeight() - gridConfigs->getCursorY()) / (float)gridConfigs->getScreenHeight();
-    // float x = -1.05 + 2 * rx;
-    // float y = -1.05 + 2 * ry;
-    // x = round(x*10)/10;
-    // y = round(y*10)/10;
-    float p[2];
-    gridConfigs->getMapBlockInitialPosition(p);
-    float x = p[0];
-    float y = p[1];
-    glVertex3f(x + 0, y + 0, 0);
-    glVertex3f(x + 0, y + 0.1, 0);
-    glVertex3f(x + 0.1, y + 0.1, 0);
-    glVertex3f(x + 0.1, y + 0, 0);
-    glEnd();
+    glPushMatrix();
+    glColor3f(1.0f,1.0f,0.0f);
+    if (gridConfigs ->getDimension() == 2) {
+      glBegin(GL_QUADS);
+      float p[2];
+      gridConfigs->getMapBlockInitialPosition(p);
+      float x = p[0];
+      float y = p[1];
+      glVertex3f(x + 0, y + 0, 0);
+      glVertex3f(x + 0, y + 0.1, 0);
+      glVertex3f(x + 0.1, y + 0.1, 0);
+      glVertex3f(x + 0.1, y + 0, 0);
+      glEnd();
+    } else if (gridConfigs ->getDimension() == 3) {
+      glBegin(GL_QUADS);
+      float p[2];
+      gridConfigs->get3dCursorMovePosition(p);
+      float x = p[0];
+      float y = p[1];
+      glVertex3f(x + 0, y + 0, 0.01);
+      glVertex3f(x + 0, y + 0.1, 0.01);
+      glVertex3f(x + 0.1, y + 0.1, 0.01);
+      glVertex3f(x + 0.1, y + 0, 0.01);
+      glEnd();
+    }
+    glPopMatrix();
   }
 };
 

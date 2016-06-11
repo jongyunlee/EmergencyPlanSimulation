@@ -1,5 +1,6 @@
 #include <iostream>
 #include <math.h>
+using namespace std;
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>
@@ -19,10 +20,12 @@ private:
   int dimension;
   float lookDistance2D;
   float lookDistance3D;
+  int cursor3dPositionX = 0;
+  int cursor3dPositionY = 0;
 public:
   GridConfigs() {
-    screenWidth = 512;
-    screenHeight = 512;
+    screenWidth = 720;
+    screenHeight = 720;
     dimension = 2;
     lookDistance2D = 3.0;
     lookDistance3D = 2.3;
@@ -62,6 +65,7 @@ public:
     gluLookAt(-lookDistance3D,-lookDistance3D,lookDistance3D,
     	      0.0,0.0,0.0,
     	      1.0f,1.0f,1.0f);
+
   }
 
   void setCursorPosition(int x, int y) {
@@ -99,9 +103,26 @@ public:
 
   void setDimension(int dimension) {
     this->dimension = dimension;
+    if (dimension == 3) {
+      cursor3dPositionX = 0;
+      cursor3dPositionY = 0;
+    }
   }
   int getDimension() {
     return dimension;
+  }
+
+  void get3dCursorMovePosition(float (&ret)[2]) {
+    ret[0] = ((float)cursor3dPositionX) * 0.1;
+    ret[1] = ((float)cursor3dPositionY) * 0.1;
+  }
+
+  void move3dPositionX(int m) {
+    cursor3dPositionX += m;
+  }
+
+  void move3dPositionY(int m) {
+    cursor3dPositionY += m;
   }
 };
 

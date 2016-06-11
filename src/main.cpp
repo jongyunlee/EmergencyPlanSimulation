@@ -63,7 +63,7 @@ void init(void) {
 
 void displayObjects() {
   grid->render();
-  if (gridConfigs->getDimension() == 2) cursorOver->render();
+  cursorOver->render();
   map->render();
 }
 
@@ -103,6 +103,16 @@ void keyboard (unsigned char key, int x, int y) {
   if (key == 'p') {
     if (gridConfigs->getDimension() == 2)gridConfigs->setDimension(3);
     else if (gridConfigs->getDimension() == 3)gridConfigs->setDimension(2);
+  } else if (key == 'w') {
+    if (gridConfigs->getDimension() == 3)gridConfigs->move3dPositionY(1);
+  } else if (key == 's') {
+    if (gridConfigs->getDimension() == 3)gridConfigs->move3dPositionY(-1);
+  } else if (key == 'a') {
+    if (gridConfigs->getDimension() == 3)gridConfigs->move3dPositionX(-1);
+  } else if (key == 'd') {
+    if (gridConfigs->getDimension() == 3)gridConfigs->move3dPositionX(+1);
+  } else if (key == ' ') {
+    if (gridConfigs->getDimension() == 3)map->addPathPosition();
   }
 }
 

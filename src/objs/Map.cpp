@@ -1,4 +1,5 @@
 #include <iostream>
+#include <list>
 #include "../utils/GridConfigs.cpp"
 #include "../../core/bitmap/bmploader.h"
 using namespace std;
@@ -12,6 +13,11 @@ using namespace std;
 #ifndef MAP_H
 #define MAP_H
 
+struct Position {
+  float x;
+  float y;
+};
+
 class Map {
 private:
   GridConfigs *gridConfigs;
@@ -20,6 +26,8 @@ private:
   int imageHeight;
   uchar4 *dst;
   GLuint color_tex;
+  Position paths[10];
+  int pathCount;
 public:
 
   Map(GridConfigs *gridConfigs) {
@@ -38,16 +46,30 @@ public:
 	map[i][j] = 0;
       }
     }
+    pathCount = 0;
   }
 
   void render() {
+    glPushMatrix();
     for (int i=0; i<20; i++) {
       for (int j=0; j<20; j++){
     	if (map[i][j] == 1) {
-	  drawCube((i-10)*0.1 + 0.05, (j-10)*0.1 + 0.05, 0.2f);
+	  drawCube((i-10)*0.1 + 0.05, (j-10)*0.1 + 0.05, 0.1f);
 	}
       }
     }
+    for (int i=0; i< pathCount-1; i++) {
+      glPushMatrix();
+      glColor3f(1.0f,0.0f,0.0f);
+      glLineWidth((GLfloat)5.0);
+      glBegin(GL_LINES);
+      glVertex3f(paths[i].x, paths[i].y, 0.02);
+      glVertex3f(paths[i+1].x, paths[i+1].y, 0.02);
+      glEnd();
+      glPopMatrix();
+    }
+    drawFloor();
+    glPopMatrix();
   }
 
   void addWall() {
@@ -77,7 +99,11 @@ public:
   }
 
   void drawCube(float offX, float offY, float height) {
+    glPushMatrix();
     glEnable(GL_TEXTURE_2D);
+
+    glColor3f(1.0f,1.0f,1.0f);
+
     glBindTexture(GL_TEXTURE_2D, color_tex);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageWidth, imageHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, dst);
     glBegin(GL_QUADS);
@@ -146,6 +172,32 @@ public:
 
     glEnd();
     glDisable(GL_TEXTURE_2D);
+    glPopMatrix();
+  }
+
+  void drawFloor() {
+    glPushMatrix();
+    glColor3f(0.2f,0.5f,0.8f);
+    glBegin(GL_QUADS);
+    glVertex3f(-1, -1, 0.0);
+    glVertex3f(-1, 1, 0.0);
+    glVertex3f(1, 1, 0.0);
+    glVertex3f(1, -1, 0.0);
+    glEnd();
+    glPopMatrix();
+  }
+
+  void addPathPosition() {
+    float p[2];
+    gridConfigs->get3dCursorMovePosition(p);
+    Position position;
+    position.x = p[0];
+    position.y = p[1];
+    paths[pathCount] = position;
+    pathCount++;
+    pathCount %= 10;
+    cout << "pc : " << pathCount << endl;
+    // pathPositions.push_back(position);
   }
 };
 
