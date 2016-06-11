@@ -1,6 +1,6 @@
 #include <iostream>
-#include "../../core/bitmap/bmploader.h"
 #include "../utils/GridConfigs.cpp"
+#include "../../core/bitmap/bmploader.h"
 using namespace std;
 
 #ifdef __APPLE__

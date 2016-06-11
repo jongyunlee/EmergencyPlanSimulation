@@ -19,12 +19,14 @@
 #include <assert.h>
 #include "math.h"
 
-#include "../core/bitmap/bmploader.h"
-// #include "../core/trackball/TrackBallController.h"
 #include "objs/Grid.cpp"
 #include "objs/CursorOver.cpp"
 #include "objs/Map.cpp"
 #include "utils/GridConfigs.cpp"
+
+#include "../core/bitmap/bmploader.h"
+#include "../core/shader/textfile.h"
+// #include "../core/trackball/TrackBallController.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -35,7 +37,7 @@ GridConfigs *gridConfigs;
 CursorOver *cursorOver;
 Map *map;
 Grid *grid;
-
+GLuint p;
 bool drag = false;
 
 void init(void) {
@@ -51,6 +53,12 @@ void init(void) {
   cursorOver = new CursorOver(gridConfigs);
   map = new Map(gridConfigs);
   // grid->enableTrackball(true);
+#ifdef __APPLE__
+  p = createGLSLProgram( "./shader/apple/ex.vert", NULL, "./shader/apple/ex.frag" );
+#else
+  p = createGLSLProgram( "./shader/win/ex.vert", "./shader/win/ex.geom", "./shader/win/ex.frag" );
+#endif
+
 }
 
 void displayObjects() {
