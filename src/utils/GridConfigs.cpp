@@ -20,12 +20,14 @@ private:
   int dimension;
   float lookDistance2D;
   float lookDistance3D;
-  int cursor3dPositionX = 0;
-  int cursor3dPositionY = 0;
+  int cursor3dPositionX;
+  int cursor3dPositionY;
   bool walkMode;
   float fromWX, fromWY, toWX, toWY;
 public:
   GridConfigs() {
+	cursor3dPositionX = 0;
+	cursor3dPositionY = 0;
     screenWidth = 720;
     screenHeight = 720;
     dimension = 2;
@@ -99,8 +101,8 @@ public:
     float ry = (float)(this->getScreenHeight() - this->getCursorY()) / (float)this->getScreenHeight();
     float x = -1.05 + 2 * rx;
     float y = -1.05 + 2 * ry;
-    x = round(x*10)/10;
-    y = round(y*10)/10;
+    x = (x*10)/10;
+    y = (y*10)/10;
     ret[0] = x;
     ret[1] = y;
   }
