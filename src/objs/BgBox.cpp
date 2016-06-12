@@ -67,7 +67,7 @@ public:
   uchar4 *d;
   BgBox(GLfloat size) : Cube(size) {
     makeSyntheticImages();
-    translate(0.0, 0.0, -2);
+    // translate(0.0, 0.0, 2.0);
     this->imageWidth = 4;
     this->imageHeight = 4;
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);

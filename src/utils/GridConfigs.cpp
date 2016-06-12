@@ -101,8 +101,8 @@ public:
     float ry = (float)(this->getScreenHeight() - this->getCursorY()) / (float)this->getScreenHeight();
     float x = -1.05 + 2 * rx;
     float y = -1.05 + 2 * ry;
-    x = (x*10)/10;
-    y = (y*10)/10;
+    x = round(x*10.0)/10.0;
+    y = round(y*10.0)/10.0;
     ret[0] = x;
     ret[1] = y;
   }

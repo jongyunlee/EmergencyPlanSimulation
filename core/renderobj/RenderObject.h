@@ -160,6 +160,7 @@ class RenderObject {
 
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
+    glMultMatrixf(m);
     drawObject();
     glPopMatrix();
   }

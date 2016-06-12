@@ -22,6 +22,8 @@
 #include "objs/Grid.cpp"
 #include "objs/CursorOver.cpp"
 #include "objs/Map.cpp"
+#include "objs/Night.cpp"
+#include "objs/Chair.cpp"
 #include "utils/GridConfigs.cpp"
 
 #include "../core/bitmap/bmploader.h"
@@ -37,10 +39,12 @@ GridConfigs *gridConfigs;
 CursorOver *cursorOver;
 Map *map;
 Grid *grid;
+Night *bg;
 GLuint p;
 bool drag = false;
 int positionCount;
 int intervalCount;
+Chair *chair;
 
 void init(void) {
   glewInit();
@@ -54,7 +58,9 @@ void init(void) {
   grid = new Grid(gridConfigs);
   cursorOver = new CursorOver(gridConfigs);
   map = new Map(gridConfigs);
-  // grid->enableTrackball(true);
+  bg = new Night(8);
+  chair = new Chair(0,-0.5,0,0.5,0.5,0.5,0.4, 0.05);
+  grid->enableTrackball(true);
 #ifdef __APPLE__
   p = createGLSLProgram( "./shader/apple/ex.vert", NULL, "./shader/apple/ex.frag" );
 #else
@@ -64,9 +70,13 @@ void init(void) {
 }
 
 void displayObjects() {
+  glUseProgram(p);
   grid->render();
   cursorOver->render();
   map->render();
+  glUseProgram(0);
+  bg->render();
+  chair->render();
 }
 
 
@@ -128,7 +138,6 @@ void idle()
 {
   if (gridConfigs->getWalkMode()) {
     if (map->hasWalkPosition(positionCount) && map->hasWalkPosition(positionCount+1)) {
-      cout << "intervalcount : " << intervalCount << endl;
       intervalCount++;
       float fromX = map->getXPosition(positionCount);
       float fromY = map->getYPosition(positionCount);
@@ -136,7 +145,6 @@ void idle()
       float toY = map->getYPosition(positionCount+1);
       gridConfigs->setWalkModeLookAt(fromX + ((toX-fromX) * intervalCount / 200), fromY + ((toY-fromY) * intervalCount / 200), toX, toY);
       if (intervalCount > 200) {
-	cout << "positionCount : " << positionCount << endl;
 	intervalCount = 0;
 	positionCount++;
       }
