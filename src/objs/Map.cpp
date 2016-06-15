@@ -82,6 +82,16 @@ public:
     }
   }
 
+  void addChair() {
+    int p[2];
+    gridConfigs->getMapBlockIndex(p);
+    if (map[p[0]][p[1]] == 0) {
+      map[p[0]][p[1]] = 2;
+    } else {
+      map[p[0]][p[1]] = 0;
+    }
+  }
+
   void addWallWithoutToggle() {
     int p[2];
     gridConfigs->getMapBlockIndex(p);

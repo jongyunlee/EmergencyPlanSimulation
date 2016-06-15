@@ -44,6 +44,7 @@ GLuint p;
 bool drag = false;
 int positionCount;
 int intervalCount;
+int turningCount;
 Chair *chair;
 
 void init(void) {
@@ -128,6 +129,7 @@ void keyboard (unsigned char key, int x, int y) {
   } else if (key == 'o') {
     positionCount = 0;
     intervalCount = 0;
+    turningCount = 0;
     gridConfigs->setWalkMode();
   }
 }
@@ -138,15 +140,31 @@ void idle()
 {
   if (gridConfigs->getWalkMode()) {
     if (map->hasWalkPosition(positionCount) && map->hasWalkPosition(positionCount+1)) {
-      intervalCount++;
+
       float fromX = map->getXPosition(positionCount);
       float fromY = map->getYPosition(positionCount);
       float toX = map->getXPosition(positionCount+1);
       float toY = map->getYPosition(positionCount+1);
-      gridConfigs->setWalkModeLookAt(fromX + ((toX-fromX) * intervalCount / 200), fromY + ((toY-fromY) * intervalCount / 200), toX, toY);
-      if (intervalCount > 200) {
+      // if (intervalCount > 200) {
+      if (turningCount > 100) {
 	intervalCount = 0;
+	turningCount = 0;
 	positionCount++;
+      } else if (intervalCount > 100) {
+	turningCount++;
+	if (intervalCount <= 200)intervalCount++;
+	if (map->hasWalkPosition(positionCount+2)) {
+	  float nextToX = map->getXPosition(positionCount+2);
+	  float nextToY = map->getYPosition(positionCount+2);
+	  float resultToX = toX + (turningCount / 100.0) * (nextToX - toX);
+	  float resultToY = toY + (turningCount / 100.0) * (nextToY - toY);
+	  gridConfigs->setWalkModeLookAt(fromX + ((toX-fromX) * intervalCount / 200), fromY + ((toY-fromY) * intervalCount / 200), resultToX, resultToY);
+	} else {
+	  gridConfigs->setWalkModeLookAt(fromX + ((toX-fromX) * intervalCount / 200), fromY + ((toY-fromY) * intervalCount / 200), toX, toY);
+	}
+      } else {
+	intervalCount++;
+	gridConfigs->setWalkModeLookAt(fromX + ((toX-fromX) * intervalCount / 200), fromY + ((toY-fromY) * intervalCount / 200), toX, toY);
       }
     } else {
       gridConfigs->setWalkMode();
