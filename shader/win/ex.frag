@@ -30,6 +30,6 @@ void main()
     vec4 specular = pow(max(dot(r, v), 0.0), 100.0) * gl_FrontMaterial.specular * gl_LightSource[0].specular;
 
     // calculate result
-    gl_FragColor = glb_ambient +
-    		   att*(max(dot(l,n), 0.0)*diffuse + loc_ambient + specular);
+    gl_FragColor = gl_Color * (glb_ambient + att*(max(dot(l,n), 0.0)*diffuse + loc_ambient + specular));
+    // gl_FragColor = gl_Color;
 }

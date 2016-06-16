@@ -67,7 +67,7 @@ void init(void) {
 #ifdef __APPLE__
   p = createGLSLProgram( "./shader/apple/ex.vert", NULL, "./shader/apple/ex.frag" );
 #else
-  //p = createGLSLProgram( "./shader/win/ex.vert", "./shader/win/ex.geom", "./shader/win/ex.frag" );
+  p = createGLSLProgram( "./shader/win/ex.vert", NULL, "./shader/win/ex.frag" );
 #endif
 
 }

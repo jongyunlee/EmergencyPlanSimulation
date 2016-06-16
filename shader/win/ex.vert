@@ -16,4 +16,5 @@ void main()
         p = gl_Vertex * gl_Position;
         vec3 vDist = vec3(gl_LightSource[0].position - p);
         dist = length(vDist);
+        gl_FrontColor = gl_Color;
 }
