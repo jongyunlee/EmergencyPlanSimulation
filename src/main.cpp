@@ -68,7 +68,7 @@ void init(void) {
 #ifdef __APPLE__
   p = createGLSLProgram( "./shader/apple/ex.vert", NULL, "./shader/apple/ex.frag" );
 #else
-  p = createGLSLProgram( "./shader/win/ex.vert", "./shader/win/ex.geom", "./shader/win/ex.frag" );
+  //p = createGLSLProgram( "./shader/win/ex.vert", "./shader/win/ex.geom", "./shader/win/ex.frag" );
 #endif
 
 }
@@ -224,6 +224,52 @@ void mouseButton(int button, int state, int x, int y) {
   }
 }
 
+void menu(int value)
+{
+    switch(value) {
+    case 1:
+        if (gridConfigs->getDimension() == 2)gridConfigs->setDimension(3);
+		else if (gridConfigs->getDimension() == 3)gridConfigs->setDimension(2);
+        break;
+    case 2:
+        positionCount = 0;
+		intervalCount = 0;
+		gridConfigs->setWalkMode();
+        break;
+    case 3:
+        // Do it something, when 'Menu3' selected
+        break;
+    case 4:
+        // Do it something, when 'Sub menu child1' selected
+        break;
+    case 5:
+        // Do it something, when 'Sub menu child2' selected
+        break;
+    case 6:
+        // Do it something, when 'Sub menu child3' selected
+        break;
+    }
+    glutPostRedisplay();
+}
+
+void initMenu()
+{
+  // prepare Sub menu (it should be before glutCreateMenu(menu))
+  GLint SubMenu = glutCreateMenu(menu);
+  glutAddMenuEntry("Sub menu child1",4);
+  glutAddMenuEntry("Sub menu child2",5);
+  glutAddMenuEntry("Sub menu child3",6);
+ 
+  // Create Main menu
+  glutCreateMenu(menu);
+  glutAddMenuEntry("Switch perspective",1);
+  glutAddMenuEntry("Go!",2);
+  glutAddMenuEntry("Menu3",3);
+  glutAddSubMenu("Sub menu parent",SubMenu);	// attach Sub menu
+  glutAttachMenu(GLUT_RIGHT_BUTTON);
+
+}
+
 int main(int argc, char** argv) {
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
@@ -239,6 +285,8 @@ int main(int argc, char** argv) {
   glutMotionFunc(mouseMotion);
   glutMouseFunc(mouseButton);
   glutPassiveMotionFunc(mouseRoutine);
+  initMenu();
+  
   glutMainLoop();
   return 0;
 }
