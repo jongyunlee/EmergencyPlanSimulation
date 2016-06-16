@@ -10,7 +10,6 @@
 #include <GL/glut.h>
 #endif
 
-
 #include "../../core/renderobj/RenderObject.h"
 #include "../../core/bitmap/bmploader.h"
 

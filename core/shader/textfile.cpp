@@ -19,8 +19,6 @@
 #include <iostream>
 #include <assert.h>
 
-#include <GL/glew.h>
-
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #define apple true

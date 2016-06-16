@@ -9,7 +9,6 @@
 #include <GLUT/glut.h>
 #else
 #include <GL/glut.h>
-#include <GL/glew.h>
 #endif
 
 #ifndef RENDEROBJECT_H

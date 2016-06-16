@@ -21,7 +21,6 @@
 
 #include "objs/Grid.cpp"
 #include "objs/CursorOver.cpp"
-#include "objs/Chair.cpp"
 #include "objs/Map.cpp"
 #include "objs/Night.cpp"
 #include "utils/GridConfigs.cpp"
@@ -259,7 +258,7 @@ void initMenu()
   glutAddMenuEntry("Sub menu child1",4);
   glutAddMenuEntry("Sub menu child2",5);
   glutAddMenuEntry("Sub menu child3",6);
- 
+
   // Create Main menu
   glutCreateMenu(menu);
   glutAddMenuEntry("Switch perspective",1);
@@ -286,7 +285,7 @@ int main(int argc, char** argv) {
   glutMouseFunc(mouseButton);
   glutPassiveMotionFunc(mouseRoutine);
   initMenu();
-  
+
   glutMainLoop();
   return 0;
 }
