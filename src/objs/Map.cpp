@@ -15,6 +15,7 @@ using namespace std;
 #define MAP_H
 
 #include "Chair.cpp"
+#include "Table.cpp"
 
 struct Position {
   float x;
@@ -32,6 +33,7 @@ private:
   Position paths[10];
   int pathCount;
   Chair *chair;
+  Table *table;
 public:
 
   Map(GridConfigs *gridConfigs) {
@@ -52,6 +54,7 @@ public:
     }
     pathCount = 0;
     chair = new Chair(0,-0.5,0,0.5,0.5,0.5,0.4, 0.05);
+	table = new Table(0,-0.5,0,1.0,0.5,0.4, 0.05);
   }
 
   void render() {
@@ -81,10 +84,14 @@ public:
     glPushMatrix();
     for (int i=0; i<20; i++) {
       for (int j=0; j<20; j++){
-	if (map[i][j] == 2) {
-	  chair->setPosition((i-10)*1.0 + 0.5, -0.5, -1 * ((j-10)*1.0 + 0.5));
-	  chair->render();
-	}
+		if (map[i][j] == 2) {
+		  chair->setPosition((i-10)*1.0 + 0.5, -0.5, -1 * ((j-10)*1.0 + 0.5));
+		  chair->render();
+		}
+		else if (map[i][j] == 3) {
+		  table->setPosition((i-10)*1.0 + 0.5, -0.5, -1 * ((j-10)*1.0 + 0.5));
+		  table->render();
+		}
       }
     }
     glPopMatrix();
@@ -106,6 +113,16 @@ public:
     if (map[p[0]][p[1]] == 0) { // none
       map[p[0]][p[1]] = 2;
     } else if (map[p[0]][p[1]] == 2) { // chair
+      map[p[0]][p[1]] = 0;
+    }
+  }
+
+  void addTable() {
+    int p[2];
+    gridConfigs->getMapBlockIndex(p);
+    if (map[p[0]][p[1]] == 0) { // none
+      map[p[0]][p[1]] = 3;
+    } else if (map[p[0]][p[1]] == 3) { // table
       map[p[0]][p[1]] = 0;
     }
   }
