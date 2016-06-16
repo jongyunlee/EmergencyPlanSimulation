@@ -1,7 +1,7 @@
 #include <stdio.h>
 
-#ifndef CHAIR_OBJ
-#define CHAIR_OBJ
+#ifndef TABLE_OBJ
+#define TABLE_OBJ
 
 #include <GL/glew.h>
 #ifdef __APPLE__
@@ -13,10 +13,10 @@
 #include "../../core/renderobj/RenderObject.h"
 #include "../../core/bitmap/bmploader.h"
 
-class Chair: public RenderObject {
+class Table: public RenderObject {
 private:
   GLfloat x; GLfloat y; GLfloat z;
-  GLfloat xWidth; GLfloat zWidth; GLfloat back; GLfloat reg; GLfloat thick;
+  GLfloat xWidth; GLfloat zWidth; GLfloat reg; GLfloat thick;
   uchar4 *dst;
   GLuint color_tex;
   GLuint cube_tex;
@@ -24,18 +24,17 @@ private:
   int imageHeight;
 
 public:
-  Chair(GLfloat x, GLfloat y, GLfloat z,
-	GLfloat xWidth, GLfloat zWidth, GLfloat back, GLfloat reg, GLfloat thick) {
+  Table(GLfloat x, GLfloat y, GLfloat z,
+    GLfloat xWidth, GLfloat zWidth, GLfloat reg, GLfloat thick) {
     this->x = x;
     this->y = y;
     this->z = z;
     this->xWidth = xWidth;
     this->zWidth = zWidth;
-    this->back = back;
     this->reg = reg;
     this->thick = thick;
 
-    LoadBMPFile(&dst, &imageWidth, &imageHeight, "images/woodtexture.bmp"); // this is how to load image
+    LoadBMPFile(&dst, &imageWidth, &imageHeight, "images/marbletexture.bmp"); // this is how to load image
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glGenTextures(1, &color_tex);
     glBindTexture(GL_TEXTURE_2D, color_tex);
@@ -100,13 +99,13 @@ public:
     glVertex3f(x-xWidth/2, y+reg+thick, z+zWidth/2-thick);
 
     glTexCoord2f(0.0, 0.0);
-    glVertex3f(x-xWidth/2, y+reg+thick+back, z+zWidth/2-thick);
+    glVertex3f(x-xWidth/2, y+reg+thick, z+zWidth/2-thick);
     glTexCoord2f(0.5, 0.0);
-    glVertex3f(x+xWidth/2, y+reg+thick+back, z+zWidth/2-thick);
+    glVertex3f(x+xWidth/2, y+reg+thick, z+zWidth/2-thick);
     glTexCoord2f(0.5, 0.5);
-    glVertex3f(x+xWidth/2, y+reg+thick+back, z+zWidth/2);
+    glVertex3f(x+xWidth/2, y+reg+thick, z+zWidth/2);
     glTexCoord2f(0.0, 0.5);
-    glVertex3f(x-xWidth/2, y+reg+thick+back, z+zWidth/2);
+    glVertex3f(x-xWidth/2, y+reg+thick, z+zWidth/2);
 
     glNormal3f(0.0f, 0.0f, 1.0f);
     glTexCoord2f(0.0, 0.0);
@@ -159,9 +158,9 @@ public:
     glTexCoord2f(0.5, 0.0);
     glVertex3f(x+xWidth/2, y+reg+thick, z+zWidth/2-thick);
     glTexCoord2f(0.5, 0.5);
-    glVertex3f(x+xWidth/2, y+reg+thick+back, z+zWidth/2-thick);
+    glVertex3f(x+xWidth/2, y+reg+thick, z+zWidth/2-thick);
     glTexCoord2f(0.0, 0.5);
-    glVertex3f(x-xWidth/2, y+reg+thick+back, z+zWidth/2-thick);
+    glVertex3f(x-xWidth/2, y+reg+thick, z+zWidth/2-thick);
 
     glNormal3f(0.0f, 0.0f, -1.0f);
     glTexCoord2f(0.0, 0.0);
@@ -205,9 +204,9 @@ public:
     glTexCoord2f(0.5, 0.0);
     glVertex3f(x+xWidth/2, y+reg, z+zWidth/2);
     glTexCoord2f(0.5, 0.5);
-    glVertex3f(x+xWidth/2, y+reg+thick+back, z+zWidth/2);
+    glVertex3f(x+xWidth/2, y+reg+thick, z+zWidth/2);
     glTexCoord2f(0.0, 0.5);
-    glVertex3f(x-xWidth/2, y+reg+thick+back, z+zWidth/2);
+    glVertex3f(x-xWidth/2, y+reg+thick, z+zWidth/2);
 
     glNormal3f(-1.0f, 0.0f, 0.0f);
     glTexCoord2f(0.0, 0.0);
@@ -260,9 +259,9 @@ public:
     glTexCoord2f(0.5, 0.0);
     glVertex3f(x+xWidth/2, y+reg+thick, z+zWidth/2);
     glTexCoord2f(0.5, 0.5);
-    glVertex3f(x+xWidth/2, y+reg+thick+back, z+zWidth/2);
+    glVertex3f(x+xWidth/2, y+reg+thick, z+zWidth/2);
     glTexCoord2f(0.0, 0.5);
-    glVertex3f(x+xWidth/2, y+reg+thick+back, z+zWidth/2-thick);
+    glVertex3f(x+xWidth/2, y+reg+thick, z+zWidth/2-thick);
 
     glNormal3f(1.0f, 0.0f, 0.0f);
     glTexCoord2f(0.0, 0.0);
@@ -313,9 +312,9 @@ public:
     glTexCoord2f(0.0, 0.0);
     glVertex3f(x-xWidth/2, y+reg+thick, z+zWidth/2-thick);
     glTexCoord2f(0.5, 0.0);
-    glVertex3f(x-xWidth/2, y+reg+thick+back, z+zWidth/2-thick);
+    glVertex3f(x-xWidth/2, y+reg+thick, z+zWidth/2-thick);
     glTexCoord2f(0.5, 0.5);
-    glVertex3f(x-xWidth/2, y+reg+thick+back, z+zWidth/2);
+    glVertex3f(x-xWidth/2, y+reg+thick, z+zWidth/2);
     glTexCoord2f(0.0, 0.5);
     glVertex3f(x-xWidth/2, y+reg+thick, z+zWidth/2);
 

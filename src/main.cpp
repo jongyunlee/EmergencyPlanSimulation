@@ -3,7 +3,7 @@
  * Project : Emergency Plan Simulation
  * Author:
  * Jongyun Lee, jongyun@nspoons.com
- * Hyungmin Ganh,
+ * Hyeongmin Kang, humn@unist.ac.kr
  */
 
 #include <stdio.h>
@@ -124,6 +124,9 @@ void keyboard (unsigned char key, int x, int y) {
     } else if (key == 'c') {
       currentObject = 'c';
     }
+	  else if (key == 't') {
+      currentObject = 't';
+    }
   } else if (gridConfigs->getDimension() == 3) {
     if (key == 'p') {
       gridConfigs->setDimension(2);
@@ -236,16 +239,10 @@ void menu(int value)
 		gridConfigs->setWalkMode();
         break;
     case 3:
-        // Do it something, when 'Menu3' selected
+        currentObject = 'c';
         break;
     case 4:
-        // Do it something, when 'Sub menu child1' selected
-        break;
-    case 5:
-        // Do it something, when 'Sub menu child2' selected
-        break;
-    case 6:
-        // Do it something, when 'Sub menu child3' selected
+        currentObject = 't';
         break;
     }
     glutPostRedisplay();
@@ -255,16 +252,14 @@ void initMenu()
 {
   // prepare Sub menu (it should be before glutCreateMenu(menu))
   GLint SubMenu = glutCreateMenu(menu);
-  glutAddMenuEntry("Sub menu child1",4);
-  glutAddMenuEntry("Sub menu child2",5);
-  glutAddMenuEntry("Sub menu child3",6);
+  glutAddMenuEntry("Chair",3);
+  glutAddMenuEntry("Table",4);
 
   // Create Main menu
   glutCreateMenu(menu);
   glutAddMenuEntry("Switch perspective",1);
   glutAddMenuEntry("Go!",2);
-  glutAddMenuEntry("Menu3",3);
-  glutAddSubMenu("Sub menu parent",SubMenu);	// attach Sub menu
+  glutAddSubMenu("Draw Object",SubMenu);	// attach Sub menu
   glutAttachMenu(GLUT_RIGHT_BUTTON);
 
 }
