@@ -21,9 +21,9 @@
 
 #include "objs/Grid.cpp"
 #include "objs/CursorOver.cpp"
+#include "objs/Chair.cpp"
 #include "objs/Map.cpp"
 #include "objs/Night.cpp"
-#include "objs/Chair.cpp"
 #include "utils/GridConfigs.cpp"
 
 #include "../core/bitmap/bmploader.h"
@@ -46,6 +46,7 @@ int positionCount;
 int intervalCount;
 int turningCount;
 Chair *chair;
+char currentObject;
 
 void init(void) {
   glewInit();
@@ -61,6 +62,8 @@ void init(void) {
   map = new Map(gridConfigs);
   bg = new Night(8);
   chair = new Chair(0,-0.5,0,0.5,0.5,0.5,0.4, 0.05);
+  chair->zoom(2.0f);
+  chair->translate(0.8, 0.8, 1.0);
   grid->enableTrackball(true);
 #ifdef __APPLE__
   p = createGLSLProgram( "./shader/apple/ex.vert", NULL, "./shader/apple/ex.frag" );
@@ -72,12 +75,15 @@ void init(void) {
 
 void displayObjects() {
   glUseProgram(p);
-  grid->render();
-  cursorOver->render();
+  if(!gridConfigs->getWalkMode())grid->render();
+  if(!gridConfigs->getWalkMode())cursorOver->render();
   map->render();
   glUseProgram(0);
   bg->render();
-  chair->render();
+  map->renderWithoutShader();
+  if (gridConfigs->getDimension() == 2 && !gridConfigs->getWalkMode()) { // Displaying Current Selected Object
+    if(currentObject == 'c') chair->render();
+  }
 }
 
 
@@ -113,28 +119,39 @@ void reshape(int w, int h)
 }
 
 void keyboard (unsigned char key, int x, int y) {
-  if (key == 'p') {
-    if (gridConfigs->getDimension() == 2)gridConfigs->setDimension(3);
-    else if (gridConfigs->getDimension() == 3)gridConfigs->setDimension(2);
-  } else if (key == 'w') {
-    if (gridConfigs->getDimension() == 3)gridConfigs->move3dPositionY(1);
-  } else if (key == 's') {
-    if (gridConfigs->getDimension() == 3)gridConfigs->move3dPositionY(-1);
-  } else if (key == 'a') {
-    if (gridConfigs->getDimension() == 3)gridConfigs->move3dPositionX(-1);
-  } else if (key == 'd') {
-    if (gridConfigs->getDimension() == 3)gridConfigs->move3dPositionX(+1);
-  } else if (key == ' ') {
-    if (gridConfigs->getDimension() == 3)map->addPathPosition();
-  } else if (key == 'o') {
+  if (gridConfigs->getDimension() == 2) {
+    if (key == 'p') {
+      gridConfigs->setDimension(3);
+    } else if (key == 'c') {
+      currentObject = 'c';
+    }
+  } else if (gridConfigs->getDimension() == 3) {
+    if (key == 'p') {
+      gridConfigs->setDimension(2);
+    } else if (key == 'w') {
+      gridConfigs->move3dPositionY(1);
+    } else if (key == 's') {
+      gridConfigs->move3dPositionY(-1);
+    } else if (key == 'a') {
+      gridConfigs->move3dPositionX(-1);
+    } else if (key == 'd') {
+      gridConfigs->move3dPositionX(+1);
+    } else if (key == ' ') {
+      map->addPathPosition();
+    }
+  }
+
+  if (key == 'o') {
     positionCount = 0;
     intervalCount = 0;
     turningCount = 0;
     gridConfigs->setWalkMode();
   }
+
+
 }
 
-
+float rotateAxis[3] = {1.0, 1.0, 0.0};
 
 void idle()
 {
@@ -145,7 +162,6 @@ void idle()
       float fromY = map->getYPosition(positionCount);
       float toX = map->getXPosition(positionCount+1);
       float toY = map->getYPosition(positionCount+1);
-      // if (intervalCount > 200) {
       if (turningCount > 100) {
 	intervalCount = 0;
 	turningCount = 0;
@@ -169,6 +185,14 @@ void idle()
     } else {
       gridConfigs->setWalkMode();
     }
+  } else {
+    if (gridConfigs->getDimension() == 2) {
+      if (currentObject == 'c') {
+	chair->translate(-0.8, -0.8, -1.0);
+	chair->rotateByAxis(0.7, rotateAxis);
+	chair->translate(0.8, 0.8, 1.0);
+      }
+    }
   }
   glutPostRedisplay();
 }
@@ -191,8 +215,10 @@ void mouseButton(int button, int state, int x, int y) {
       drag = true;
       break;
     case GLUT_UP:
-      // if (gridConfigs->getDimension() == 2) map->addWall();
       drag = false;
+      if (currentObject == 'c') {
+	if (gridConfigs->getDimension() == 2) map->addChair();
+      }
       break;
     }
   }

@@ -2,6 +2,7 @@
 #include <list>
 #include "../utils/GridConfigs.cpp"
 #include "../../core/bitmap/bmploader.h"
+
 using namespace std;
 
 #ifdef __APPLE__
@@ -12,6 +13,8 @@ using namespace std;
 
 #ifndef MAP_H
 #define MAP_H
+
+#include "Chair.cpp"
 
 struct Position {
   float x;
@@ -28,6 +31,7 @@ private:
   GLuint color_tex;
   Position paths[10];
   int pathCount;
+  Chair *chair;
 public:
 
   Map(GridConfigs *gridConfigs) {
@@ -47,6 +51,7 @@ public:
       }
     }
     pathCount = 0;
+    chair = new Chair(0,-0.5,0,0.5,0.5,0.5,0.4, 0.05);
   }
 
   void render() {
@@ -72,6 +77,19 @@ public:
     glPopMatrix();
   }
 
+  void renderWithoutShader() {
+    glPushMatrix();
+    for (int i=0; i<20; i++) {
+      for (int j=0; j<20; j++){
+	if (map[i][j] == 2) {
+	  chair->setPosition((i-10)*1.0 + 0.5, -0.5, -1 * ((j-10)*1.0 + 0.5));
+	  chair->render();
+	}
+      }
+    }
+    glPopMatrix();
+  }
+
   void addWall() {
     int p[2];
     gridConfigs->getMapBlockIndex(p);
@@ -85,9 +103,9 @@ public:
   void addChair() {
     int p[2];
     gridConfigs->getMapBlockIndex(p);
-    if (map[p[0]][p[1]] == 0) {
+    if (map[p[0]][p[1]] == 0) { // none
       map[p[0]][p[1]] = 2;
-    } else {
+    } else if (map[p[0]][p[1]] == 2) { // chair
       map[p[0]][p[1]] = 0;
     }
   }

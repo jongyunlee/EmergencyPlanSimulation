@@ -182,6 +182,15 @@ class RenderObject {
     }
   }
 
+  void rotateByAxis(GLfloat angle, float axisTo[3], float axisFrom[3]){
+    if (angle != 0) {
+      mat4 r = RotateByAxis(angle,
+			    vec3(axisFrom[0], axisFrom[1], axisFrom[2]),
+			    vec3(axisTo[0], axisTo[1], axisTo[2]));
+      m = m*r;
+    }
+  }
+
   virtual void drawObject() {
     /* glutSolidCube(1); */
     glEnableClientState(GL_VERTEX_ARRAY);
