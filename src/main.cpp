@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <GL/glew.h>
+#include "../core/shader/textfile.h"
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>
@@ -26,7 +27,6 @@
 #include "utils/GridConfigs.cpp"
 
 #include "../core/bitmap/bmploader.h"
-#include "../core/shader/textfile.h"
 // #include "../core/trackball/TrackBallController.h"
 
 #include <stdlib.h>
