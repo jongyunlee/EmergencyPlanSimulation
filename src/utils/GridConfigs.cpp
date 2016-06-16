@@ -11,6 +11,9 @@ using namespace std;
 #ifndef GRIDCONFIGS_H
 #define GRIDCONFIGS_H
 
+#define	roundd(x)	((x-floor(x))>0.5 ? ceil(x) : floor(x))
+
+
 class GridConfigs {
 private:
   int cursorX;
@@ -101,8 +104,8 @@ public:
     float ry = (float)(this->getScreenHeight() - this->getCursorY()) / (float)this->getScreenHeight();
     float x = -1.05 + 2 * rx;
     float y = -1.05 + 2 * ry;
-    x = (x*10.0)/10.0;
-    y = (y*10.0)/10.0;
+    x = roundd(x*10.0)/10.0;
+    y = roundd(y*10.0)/10.0;
     ret[0] = x;
     ret[1] = y;
   }
