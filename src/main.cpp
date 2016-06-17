@@ -4,7 +4,6 @@
  * Author:
  * Jongyun Lee, jongyun@nspoons.com
  * Hyeongmin Kang, humn@unist.ac.kr
- *
  */
 
 #include <stdio.h>
@@ -130,8 +129,7 @@ void keyboard (unsigned char key, int x, int y) {
       gridConfigs->setDimension(3);
     } else if (key == 'c') {
       currentObject = 'c';
-    }
-    else if (key == 't') {
+    } else if (key == 't') {
       currentObject = 't';
     }
   } else if (gridConfigs->getDimension() == 3) {
@@ -232,8 +230,7 @@ void mouseButton(int button, int state, int x, int y) {
       drag = false;
       if (currentObject == 'c') {
 	if (gridConfigs->getDimension() == 2) map->addChair();
-      }
-      else if (currentObject == 't') {
+      } else if (currentObject == 't') {
 	if (gridConfigs->getDimension() == 2) map->addTable();
       }
       break;
