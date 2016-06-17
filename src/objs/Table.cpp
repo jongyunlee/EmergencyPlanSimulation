@@ -22,7 +22,7 @@ private:
   GLuint cube_tex;
   int imageWidth;
   int imageHeight;
-
+  float directionAxis[3];
 public:
   Table(GLfloat x, GLfloat y, GLfloat z,
     GLfloat xWidth, GLfloat zWidth, GLfloat reg, GLfloat thick) {
@@ -47,6 +47,9 @@ public:
     float axis[3] = {1.0, 0.0, 0.0};
     rotateByAxis(-90, axis);
     translate(0.0, 0.0, 0.05);
+    directionAxis[0] = 0.0;
+    directionAxis[1] = 0.0;
+    directionAxis[2] = 1.0;
   }
 
   void drawObject() {
@@ -322,10 +325,50 @@ public:
     glDisable(GL_TEXTURE_2D);
   }
 
-  void setPosition(float x, float y, float z) {
-    this->x = x;
-    this->y = y;
-    this->z = z;
+  void setPosition(int x, int y) {
+    x -= 10;
+    y -= 10;
+    translate(x * 0.1 + 0.05, y * 0.1 + 0.05, 0);
+  }
+
+  void resetPosition(int x, int y) {
+    x -= 10;
+    y -= 10;
+    translate(-0.1 * x - 0.05, -0.1 * y - 0.05, 0);
+  }
+
+  void setDirection(int direction) {
+    switch(direction) {
+    case 0: // up
+
+      break;
+    case 1: // right
+      rotateByAxis(90, directionAxis);
+      break;
+    case 2: // down
+      rotateByAxis(180, directionAxis);
+      break;
+    case 3: // left
+      rotateByAxis(270, directionAxis);
+      break;
+    }
+  }
+
+  void resetDirection(int direction) {
+    switch(direction) {
+    case 0: // up
+
+      break;
+    case 1: // right
+      rotateByAxis(-90, directionAxis);
+      break;
+    case 2: // down
+      rotateByAxis(-180, directionAxis);
+      break;
+    case 3: // left
+      rotateByAxis(-270, directionAxis);
+      break;
+    }
   }
 };
 

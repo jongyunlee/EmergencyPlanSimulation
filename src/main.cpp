@@ -69,6 +69,7 @@ void init(void) {
   table->zoom(2.0f);
   table->translate(0.8, 0.8, 1.0);
   grid->enableTrackball(true);
+  currentObject = 'w';
 #ifdef __APPLE__
   p = createGLSLProgram( "./shader/apple/ex.vert", NULL, "./shader/apple/ex.frag" );
 #else
@@ -131,6 +132,8 @@ void keyboard (unsigned char key, int x, int y) {
       currentObject = 'c';
     } else if (key == 't') {
       currentObject = 't';
+    } else if (key == 'w') {
+      currentObject = 'w';
     }
   } else if (gridConfigs->getDimension() == 3) {
     if (key == 'p') {
@@ -228,10 +231,14 @@ void mouseButton(int button, int state, int x, int y) {
       break;
     case GLUT_UP:
       drag = false;
-      if (currentObject == 'c') {
-	if (gridConfigs->getDimension() == 2) map->addChair();
-      } else if (currentObject == 't') {
-	if (gridConfigs->getDimension() == 2) map->addTable();
+      if (gridConfigs->getDimension() == 2) {
+	if (currentObject == 'c') {
+	  map->addChair();
+	} else if (currentObject == 't') {
+	  map->addTable();
+	} else if (currentObject == 'w') {
+	  map->addWall();
+	}
       }
       break;
     }
