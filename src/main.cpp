@@ -3,7 +3,8 @@
  * Project : Emergency Plan Simulation
  * Author:
  * Jongyun Lee, jongyun@nspoons.com
- * Hyungmin Ganh,
+ * Hyeongmin Kang, humn@unist.ac.kr
+ *
  */
 
 #include <stdio.h>
@@ -45,6 +46,8 @@ int positionCount;
 int intervalCount;
 int turningCount;
 Chair *chair;
+Table *table;
+
 char currentObject;
 
 void init(void) {
@@ -63,6 +66,9 @@ void init(void) {
   chair = new Chair(0,-0.5,0,0.5,0.5,0.5,0.4, 0.05);
   chair->zoom(2.0f);
   chair->translate(0.8, 0.8, 1.0);
+  table = new Table(0,-0.5,0,1.0,0.5,0.4,0.05);
+  table->zoom(2.0f);
+  table->translate(0.8, 0.8, 1.0);
   grid->enableTrackball(true);
 #ifdef __APPLE__
   p = createGLSLProgram( "./shader/apple/ex.vert", NULL, "./shader/apple/ex.frag" );
@@ -82,6 +88,7 @@ void displayObjects() {
   map->renderWithoutShader();
   if (gridConfigs->getDimension() == 2 && !gridConfigs->getWalkMode()) { // Displaying Current Selected Object
     if(currentObject == 'c') chair->render();
+    else if(currentObject == 't') table->render();
   }
 }
 
@@ -123,6 +130,9 @@ void keyboard (unsigned char key, int x, int y) {
       gridConfigs->setDimension(3);
     } else if (key == 'c') {
       currentObject = 'c';
+    }
+    else if (key == 't') {
+      currentObject = 't';
     }
   } else if (gridConfigs->getDimension() == 3) {
     if (key == 'p') {
@@ -191,6 +201,11 @@ void idle()
 	chair->rotateByAxis(0.7, rotateAxis);
 	chair->translate(0.8, 0.8, 1.0);
       }
+      if (currentObject == 't') {
+	table->translate(-0.8, -0.8, -1.0);
+	table->rotateByAxis(0.7, rotateAxis);
+	table->translate(0.8, 0.8, 1.0);
+      }
     }
   }
   glutPostRedisplay();
@@ -218,6 +233,9 @@ void mouseButton(int button, int state, int x, int y) {
       if (currentObject == 'c') {
 	if (gridConfigs->getDimension() == 2) map->addChair();
       }
+      else if (currentObject == 't') {
+	if (gridConfigs->getDimension() == 2) map->addTable();
+      }
       break;
     }
   }
@@ -225,46 +243,46 @@ void mouseButton(int button, int state, int x, int y) {
 
 void menu(int value)
 {
-    switch(value) {
-    case 1:
-        if (gridConfigs->getDimension() == 2)gridConfigs->setDimension(3);
-		else if (gridConfigs->getDimension() == 3)gridConfigs->setDimension(2);
-        break;
-    case 2:
-        positionCount = 0;
-		intervalCount = 0;
-		gridConfigs->setWalkMode();
-        break;
-    case 3:
-        // Do it something, when 'Menu3' selected
-        break;
-    case 4:
-        // Do it something, when 'Sub menu child1' selected
-        break;
-    case 5:
-        // Do it something, when 'Sub menu child2' selected
-        break;
-    case 6:
-        // Do it something, when 'Sub menu child3' selected
-        break;
-    }
-    glutPostRedisplay();
+  switch(value) {
+  case 1:
+    if (gridConfigs->getDimension() == 2)gridConfigs->setDimension(3);
+    else if (gridConfigs->getDimension() == 3)gridConfigs->setDimension(2);
+    break;
+  case 2:
+    positionCount = 0;
+    intervalCount = 0;
+    gridConfigs->setWalkMode();
+    break;
+  case 3:
+    currentObject = 'c';
+    break;
+  case 4:
+    currentObject = 't';
+    break;
+  case 5:
+    map->saveAsFile();
+    break;
+  case 6:
+    map->readFile();
+    break;
+  }
+  glutPostRedisplay();
 }
 
 void initMenu()
 {
   // prepare Sub menu (it should be before glutCreateMenu(menu))
   GLint SubMenu = glutCreateMenu(menu);
-  glutAddMenuEntry("Sub menu child1",4);
-  glutAddMenuEntry("Sub menu child2",5);
-  glutAddMenuEntry("Sub menu child3",6);
+  glutAddMenuEntry("Chair",3);
+  glutAddMenuEntry("Table",4);
 
   // Create Main menu
   glutCreateMenu(menu);
   glutAddMenuEntry("Switch perspective",1);
   glutAddMenuEntry("Go!",2);
-  glutAddMenuEntry("Menu3",3);
-  glutAddSubMenu("Sub menu parent",SubMenu);	// attach Sub menu
+  glutAddMenuEntry("Save",5);
+  glutAddMenuEntry("ReadFile",6);
+  glutAddSubMenu("Draw Object",SubMenu);	// attach Sub menu
   glutAttachMenu(GLUT_RIGHT_BUTTON);
 
 }
