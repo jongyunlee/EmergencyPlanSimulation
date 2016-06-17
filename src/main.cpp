@@ -269,6 +269,12 @@ void menu(int value)
   case 6:
     map->readFile();
     break;
+  case 7:
+    map->clear();
+    break;
+  case 8:
+    map->pathUndo();
+    break;
   }
   glutPostRedisplay();
 }
@@ -286,6 +292,8 @@ void initMenu()
   glutAddMenuEntry("Go!",2);
   glutAddMenuEntry("Save",5);
   glutAddMenuEntry("ReadFile",6);
+  glutAddMenuEntry("Clear",7);
+  glutAddMenuEntry("Path Undo",8);
   glutAddSubMenu("Draw Object",SubMenu);	// attach Sub menu
   glutAttachMenu(GLUT_RIGHT_BUTTON);
 

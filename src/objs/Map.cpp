@@ -31,7 +31,7 @@ private:
   int imageHeight;
   uchar4 *dst;
   GLuint color_tex;
-  Position paths[10];
+  Position paths[20];
   int pathCount;
   Chair *chair;
   Table *table;
@@ -48,11 +48,7 @@ public:
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-    for (int i=0; i<20; i++) {
-      for (int j=0; j<20; j++) {
-	map[i][j] = 0;
-      }
-    }
+    clear();
     pathCount = 0;
     chair = new Chair(0,-0.5,0,0.5,0.5,0.5,0.4, 0.05);
     table = new Table(0,-0.5,0,1.0,0.5,0.4, 0.05);
@@ -249,8 +245,7 @@ public:
     position.y = p[1];
     paths[pathCount] = position;
     pathCount++;
-    pathCount %= 10;
-    cout << "pc : " << pathCount << endl;
+    pathCount %= 20;
     // pathPositions.push_back(position);
   }
 
@@ -279,6 +274,14 @@ public:
       }
     }
     myfile.close();
+
+    // save path
+    myfile.open("path.txt");
+    myfile << pathCount << " ";
+    for (int i=0; i<20; i++) {
+      myfile << paths[i].x << " " << paths[i].y << " ";
+    }
+    myfile.close();
   }
 
   void readFile() {
@@ -290,6 +293,30 @@ public:
       }
     }
     myfile.close();
+    myfile.open("path.txt");
+    myfile >> pathCount;
+    for (int i=0; i<20; i++) {
+      float x;
+      float y;
+      myfile >> x;
+      myfile >> y;
+      paths[i].x = x;
+      paths[i].y = y;
+    }
+    myfile.close();
+  }
+
+  void clear() {
+    for (int i=0; i<20; i++) {
+      for (int j=0; j<20; j++) {
+	map[i][j] = 0;
+      }
+    }
+    pathCount = 0;
+  }
+
+  void pathUndo() {
+    if (pathCount > 0) pathCount--;
   }
 };
 
